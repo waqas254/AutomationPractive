@@ -17,6 +17,7 @@ Given(/^I am on developer select page$/) do
 end
 
 When(/^I select "([^"]*)" value from dropdown$/) do |arg1|
+
   select arg1, :from => 'select'
 end
 
@@ -39,7 +40,11 @@ Given(/^I am on "([^"]*)" page$/) do |page|
 end
 
 When(/^I select radio button "([^"]*)"$/) do |arg1|
-  choose(arg1)
+  name=all(:radio_button).sample.value.capitalize
+  puts name
+  choose(name)
+
+  #choose(arg1)
 end
 
 Then(/^Radio button "([^"]*)" should be selected$/) do |arg1|

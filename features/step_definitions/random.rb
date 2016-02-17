@@ -1,27 +1,38 @@
 
+$name
+
 Given(/^I am on required page$/) do
   visit("http://formvalidation.io/examples/complex-form/bootstrap.html")
 end
+
+When(/^I fill in "([^"]*)" with random name$/) do |locator|
+  name = Faker::Name.name
+  puts "Random name: #{name}"
+  fill_in(locator, with: name)
+end
+
+
+And(/^I remember entered text in "([^"]*)"$/) do |locator|
+  $name=find(:fillable_field, locator).value
+end
+
+
+And(/^confirm if "([^"]*)" has remembered name text$/) do |locator|
+  expect(find(:fillable_field, locator).value).to eq($name)
+end
+
+
+
+
 When(/^I fill movie title with random text$/) do
   movie= Faker::Lorem.sentence(3, true, 4)
   find(:css, "#movieForm > div:nth-child(2) > div > div.col-xs-8.has-feedback > input").set(movie)
 
 end
 
-And(/^I fill Director with random name$/) do
-  director=Faker::Name.name
-  find(:css, "#movieForm > div:nth-child(3) > div > div:nth-child(1) > input").set(director)
-end
 
-And(/^I fill Writer with random name$/) do
-  writer=Faker::Name.name
-  find(:css, "#movieForm > div:nth-child(3) > div > div:nth-child(2) > input").set(writer)
-end
 
-And(/^I fill Producer with random name$/) do
-  producer=Faker::Name.name
-  find(:css, "#movieForm > div:nth-child(3) > div > div:nth-child(3) > input").set(producer)
-end
+
 
 And(/^I fill website with random link$/) do
   website=Faker::Internet.url
@@ -44,7 +55,9 @@ Then(/^page should not include "([^"]*)"$/) do |arg1|
 end
 
 And(/^I choose genre$/) do
-  select 'Horror', :from => 'genre'
+  dropdowntext=all(:option)[1..-1].sample.value.capitalize
+  puts "test "+dropdowntext
+  select dropdowntext, :from => 'genre'
 end
 
 And(/^I press validate button$/) do
